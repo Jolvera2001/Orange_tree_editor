@@ -16,7 +16,8 @@
     <!-- </Design.DataContext> -->
     <Window.KeyBindings>
         <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveFileCommand}" />
-        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenFileCommand}" />
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenFileDialogCommand}" />
+        <KeyBinding Gesture="Ctrl+K" Command="{Binding OpenFolderDialogCommand}" />
     </Window.KeyBindings>
 
     <DockPanel>
@@ -24,15 +25,18 @@
               BorderBrush="Gray" 
               BorderThickness="0, 0, 0, 1">
             <MenuItem Header="_File">
-                <MenuItem Header="_Open" Command="{Binding OpenFileCommand}" />
+                <MenuItem Header="_Open" Command="{Binding OpenFileDialogCommand}" />
             </MenuItem>
         </Menu>
         <TreeView DockPanel.Dock="Left"
+                  ItemsSource="{Binding FolderItems}"
                   Width="250"
                   Background="LightGray">
-            <TreeViewItem>
-                I am not implemented yet
-            </TreeViewItem>
+            <TreeView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </TreeView.ItemTemplate>
         </TreeView>
         <UniformGrid Rows="1" Columns="2">
             <avaloniaEdit:TextEditor Grid.Column="0"

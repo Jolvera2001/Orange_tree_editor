@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using AvaloniaEdit.Document;
+using DynamicData;
+using Orange_tree_editor.Models;
 using Orange_tree_editor.Services;
 using ReactiveUI;
 
@@ -15,13 +18,15 @@ namespace Orange_tree_editor.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
+    private string[] _supportedExtensions = [".md", ".markdown"];
+    
     // service vars
     IFileHelper _fileHelper;
     
     // Regular reactives
     private TextDocument _editorContent = new();
     private string _currentFile = "";
-    public ObservableCollection<string> FolderItems { get; } = new();
+    public ObservableCollection<FolderItem> FolderItems { get; } = new();
     
     public TextDocument EditorContent
     {
@@ -40,15 +45,18 @@ public class MainWindowViewModel : ViewModelBase
     public string PreviewContent => _previewContent.Value;
     
     // commands
-    public ReactiveCommand<Unit, Unit> OpenFileCommand { get; }
+    public ReactiveCommand<Unit, Unit> OpenFileDialogCommand { get; }
+    public ReactiveCommand<Unit, Unit> OpenFolderDialogCommand { get; }
     public ReactiveCommand<Unit, Unit> SaveFileCommand { get; }
-    public ReactiveCommand<Unit, Unit> OpenFolderCommand { get; }
+    public ReactiveCommand<string, Unit> OpenFileCommand { get; }
 
     public MainWindowViewModel(IFileHelper fileHelper)
     {
         _fileHelper = fileHelper;
         
-        OpenFileCommand = ReactiveCommand.CreateFromTask(OpenFileAsync);
+        OpenFileDialogCommand = ReactiveCommand.CreateFromTask(OpenFileDialogAsync);
+        OpenFolderDialogCommand = ReactiveCommand.CreateFromTask(OpenFolderDialogAsync);
+        OpenFileCommand = ReactiveCommand.CreateFromTask<string>(OpenFileItemAsync);
         SaveFileCommand = ReactiveCommand.CreateFromTask(
             SaveFileAsync,
             this.WhenAnyValue(x => x.CurrentFile).Select(path => !string.IsNullOrEmpty(path))
@@ -62,7 +70,25 @@ public class MainWindowViewModel : ViewModelBase
             .ToProperty(this, x => x.PreviewContent);
     }
 
-    private async Task OpenFileAsync()
+    private async Task OpenFileItemAsync(string path)
+    {
+        try
+        {
+            // automatically save for now
+            await _fileHelper.WriteAllText(CurrentFile, EditorContent.Text);
+            
+            // then switch
+            EditorContent.Text = await _fileHelper.ReadAllText(path);
+            CurrentFile = path;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        
+    }
+
+    private async Task OpenFileDialogAsync()
     {
         try
         {
@@ -85,6 +111,36 @@ public class MainWindowViewModel : ViewModelBase
         try
         {
             await _fileHelper.WriteAllText(CurrentFile, EditorContent.Text);    
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task OpenFolderDialogAsync()
+    {
+        try
+        {
+            var folder = await DoOpenFolderPickerAsync();
+            if (folder is null) return;
+            
+            var files = await _fileHelper.GetDirectoriesInDirectory(folder.Path.AbsolutePath);
+            var supportedFiles = files.Where(
+                file => _supportedExtensions.Contains(Path.GetExtension(file).ToLower()));
+            FolderItems.Clear();
+
+            foreach (var file in supportedFiles)
+            {
+                var item = new FolderItem
+                {
+                    Name = Path.GetFileNameWithoutExtension(file),
+                    Path = file,
+                    IsFolder = !_fileHelper.DirectoryExists(file),
+                    Type = Path.GetExtension(file)
+                };
+                FolderItems.Add(item);
+            }
         }
         catch (Exception ex)
         {
