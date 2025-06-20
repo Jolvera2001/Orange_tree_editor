@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Orange_tree_editor.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:md="https://github.com/whistyun/Markdown.Avalonia"
+        xmlns:avaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Orange_tree_editor.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Orange_tree_editor">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="*,*">
+        <avaloniaEdit:TextEditor Grid.Column="0"
+                                 Name="Editor"
+                                 Document="{Binding EditorContent}" />
+                                 <!-- ShowLineNumbers="True" -->
+                                 <!-- FontFamily="Cascadia Code, Consolas, Menlo, Monospace" -->
+                                 <!-- HorizontalScrollBarVisibility="Auto" -->
+                                 <!-- VerticalScrollBarVisibility="Visible" -->
+                                 <!-- FontWeight="Light" -->
+                                 <!-- FontSize="14" -->
+                                 <!-- SyntaxHighlighting="Markdown" -->
+                                 <!-- Watermark="Start typing to bring your ideas to life..."  -->
+        <md:MarkdownScrollViewer Grid.Column="1" 
+                                 Markdown="{Binding PreviewContent}" />
+    </Grid>
+
+</Window>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Orange_tree_editor/App.axaml" value="Orange_tree_editor/Orange_tree_editor.csproj" />
+        <entry key="Orange_tree_editor/Views/MainWindow.axaml" value="Orange_tree_editor/Orange_tree_editor.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
