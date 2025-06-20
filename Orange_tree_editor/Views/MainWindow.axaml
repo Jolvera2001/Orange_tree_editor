@@ -38,19 +38,6 @@
                   Background="LightGray">
             <TreeView.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="Transparent" 
-                            Padding="5,2">
-                        <Border.Styles>
-                            <Style Selector="Border:pointerover">
-                                <Setter Property="Background" Value="LightBlue" />
-                            </Style>
-                        </Border.Styles>
-                        <TextBlock Text="{Binding Name}" />
-                        <Border.GestureRecognizers>
-                            <TappedGestureRecognizer Command="{Binding $parent[TreeView].((vm:MainWindowViewModel)DataContext).OpenFileCommand}"
-                                                     CommandParameter="{Binding Path}" />
-                        </Border.GestureRecognizers>
-                    </Border>
                     <Button Content="{Binding Name}"
                             Command="{Binding $parent[TreeView].((vm:MainWindowViewModel)DataContext).OpenFileCommand}"
                             CommandParameter="{Binding Path}">
