@@ -13,7 +13,6 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = new MainWindowViewModel();
         
         Editor.FontSize = 14;
         Editor.ShowLineNumbers = true;
