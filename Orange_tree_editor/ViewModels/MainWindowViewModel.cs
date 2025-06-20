@@ -74,6 +74,11 @@ public class MainWindowViewModel : ViewModelBase
     {
         try
         {
+            if (CurrentFile != null)
+            {
+                
+            }
+            
             EditorContent.Text = await _fileHelper.ReadAllText(path);
             CurrentFile = path;
         }

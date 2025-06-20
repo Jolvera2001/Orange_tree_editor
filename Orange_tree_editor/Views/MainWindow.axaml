@@ -22,6 +22,7 @@
     </Window.KeyBindings>
 
     <DockPanel>
+        <!-- Top bar -->
         <Menu DockPanel.Dock="Top" 
               BorderBrush="Gray" 
               BorderThickness="0, 0, 0, 1">
@@ -31,6 +32,15 @@
                 <MenuItem Header="_Open Save" Command="{Binding SaveFileCommand}" />
             </MenuItem>
         </Menu>
+        
+        <!-- Bottom Bar -->
+        <Panel DockPanel.Dock="Bottom"
+               Background="DarkGray"
+               Height="30">
+            
+        </Panel>
+        
+        <!-- Sidebar -->
         <TreeView DockPanel.Dock="Left"
                   ItemsSource="{Binding FolderItems}"
                   Width="250"
@@ -44,6 +54,8 @@
                 </DataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
+        
+        <!-- Main Area -->
         <UniformGrid Rows="1" Columns="2">
             <avaloniaEdit:TextEditor Grid.Column="0"
                                      Name="Editor"
