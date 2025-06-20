@@ -11,9 +11,13 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="Orange_tree_editor">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+    <!-- <Design.DataContext> -->
+    <!--     <vm:MainWindowViewModel/> -->
+    <!-- </Design.DataContext> -->
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveFileCommand}" />
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenFileCommand}" />
+    </Window.KeyBindings>
 
     <DockPanel>
         <Menu DockPanel.Dock="Top" 

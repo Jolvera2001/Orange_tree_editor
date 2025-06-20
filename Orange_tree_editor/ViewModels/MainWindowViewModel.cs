@@ -20,12 +20,19 @@ public class MainWindowViewModel : ViewModelBase
     
     // Regular reactives
     private TextDocument _editorContent = new();
+    private string _currentFile = "";
     public ObservableCollection<string> FolderItems { get; } = new();
     
     public TextDocument EditorContent
     {
         get => _editorContent;
         set => this.RaiseAndSetIfChanged(ref _editorContent, value);
+    }
+
+    public string CurrentFile
+    {
+        get => _currentFile;
+        set => this.RaiseAndSetIfChanged(ref _currentFile, value);
     }
     
     // Observables
@@ -34,12 +41,18 @@ public class MainWindowViewModel : ViewModelBase
     
     // commands
     public ReactiveCommand<Unit, Unit> OpenFileCommand { get; }
+    public ReactiveCommand<Unit, Unit> SaveFileCommand { get; }
+    public ReactiveCommand<Unit, Unit> OpenFolderCommand { get; }
 
     public MainWindowViewModel(IFileHelper fileHelper)
     {
         _fileHelper = fileHelper;
         
         OpenFileCommand = ReactiveCommand.CreateFromTask(OpenFileAsync);
+        SaveFileCommand = ReactiveCommand.CreateFromTask(
+            SaveFileAsync,
+            this.WhenAnyValue(x => x.CurrentFile).Select(path => !string.IsNullOrEmpty(path))
+        );
         
         _previewContent = Observable.FromEventPattern(
                 h => _editorContent.TextChanged += h,
@@ -59,6 +72,19 @@ public class MainWindowViewModel : ViewModelBase
             await using var readStream = await file.OpenReadAsync();
             using var reader = new StreamReader(readStream);
             EditorContent.Text = await reader.ReadToEndAsync();
+            CurrentFile = file.Path.AbsolutePath;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task SaveFileAsync()
+    {
+        try
+        {
+            await _fileHelper.WriteAllText(CurrentFile, EditorContent.Text);    
         }
         catch (Exception ex)
         {
