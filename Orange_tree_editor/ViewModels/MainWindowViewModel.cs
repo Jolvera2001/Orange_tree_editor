@@ -74,10 +74,6 @@ public class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            // automatically save for now
-            await _fileHelper.WriteAllText(CurrentFile, EditorContent.Text);
-            
-            // then switch
             EditorContent.Text = await _fileHelper.ReadAllText(path);
             CurrentFile = path;
         }
@@ -125,9 +121,9 @@ public class MainWindowViewModel : ViewModelBase
             var folder = await DoOpenFolderPickerAsync();
             if (folder is null) return;
             
-            var files = await _fileHelper.GetDirectoriesInDirectory(folder.Path.AbsolutePath);
+            var files = await _fileHelper.GetFilesInDirectory(folder.Path.AbsolutePath);
             var supportedFiles = files.Where(
-                file => _supportedExtensions.Contains(Path.GetExtension(file).ToLower()));
+                file => _supportedExtensions.Contains(Path.GetExtension(file)));
             FolderItems.Clear();
 
             foreach (var file in supportedFiles)
@@ -136,7 +132,7 @@ public class MainWindowViewModel : ViewModelBase
                 {
                     Name = Path.GetFileNameWithoutExtension(file),
                     Path = file,
-                    IsFolder = !_fileHelper.DirectoryExists(file),
+                    IsFolder = _fileHelper.DirectoryExists(file),
                     Type = Path.GetExtension(file)
                 };
                 FolderItems.Add(item);
