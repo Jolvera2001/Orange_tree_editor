@@ -29,7 +29,11 @@
             <MenuItem Header="_File">
                 <MenuItem Header="_Open File" Command="{Binding OpenFileDialogCommand}" />
                 <MenuItem Header="_Open Folder" Command="{Binding OpenFolderDialogCommand}" />
-                <MenuItem Header="_Open Save" Command="{Binding SaveFileCommand}" />
+                <MenuItem Header="_Save File" Command="{Binding SaveFileCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Upload">
+                <MenuItem Header="_Current File" />
+                <MenuItem Header="_Select File" />
             </MenuItem>
         </Menu>
         
