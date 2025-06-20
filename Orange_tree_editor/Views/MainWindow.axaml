@@ -20,7 +20,7 @@
               BorderBrush="Gray" 
               BorderThickness="0, 0, 0, 1">
             <MenuItem Header="_File">
-                
+                <MenuItem Header="_Open" Command="{Binding OpenFileCommand}" />
             </MenuItem>
         </Menu>
         <TreeView DockPanel.Dock="Left"
