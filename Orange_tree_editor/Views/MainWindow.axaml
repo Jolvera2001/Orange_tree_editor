@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:vm="using:Orange_tree_editor.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -34,7 +35,10 @@
                   Background="LightGray">
             <TreeView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}" />
+                    <Button Content="{Binding Name}"
+                            Command="{Binding $parent[TreeView].((vm:MainWindowViewModel)DataContext).OpenFileCommand}"
+                            CommandParameter="{Binding Path}">
+                    </Button>
                 </DataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
