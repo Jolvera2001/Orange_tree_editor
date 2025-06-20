@@ -15,20 +15,28 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="*,*">
-        <avaloniaEdit:TextEditor Grid.Column="0"
-                                 Name="Editor"
-                                 Document="{Binding EditorContent}" />
-                                 <!-- ShowLineNumbers="True" -->
-                                 <!-- FontFamily="Cascadia Code, Consolas, Menlo, Monospace" -->
-                                 <!-- HorizontalScrollBarVisibility="Auto" -->
-                                 <!-- VerticalScrollBarVisibility="Visible" -->
-                                 <!-- FontWeight="Light" -->
-                                 <!-- FontSize="14" -->
-                                 <!-- SyntaxHighlighting="Markdown" -->
-                                 <!-- Watermark="Start typing to bring your ideas to life..."  -->
-        <md:MarkdownScrollViewer Grid.Column="1" 
-                                 Markdown="{Binding PreviewContent}" />
-    </Grid>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" 
+              BorderBrush="Gray" 
+              BorderThickness="0, 0, 0, 1">
+            <MenuItem Header="_File">
+                
+            </MenuItem>
+        </Menu>
+        <TreeView DockPanel.Dock="Left"
+                  Width="250"
+                  Background="LightGray">
+            <TreeViewItem>
+                I am not implemented yet
+            </TreeViewItem>
+        </TreeView>
+        <UniformGrid Rows="1" Columns="2">
+            <avaloniaEdit:TextEditor Grid.Column="0"
+                                     Name="Editor"
+                                     Document="{Binding EditorContent}" />
+            <md:MarkdownScrollViewer Grid.Column="1" 
+                                     Markdown="{Binding PreviewContent}" />
+        </UniformGrid>
+    </DockPanel>
 
 </Window>

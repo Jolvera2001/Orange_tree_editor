@@ -29,7 +29,7 @@ public partial class MainWindow : Window
 
     public void SetupHighlighting(TextEditor editor)
     {
-        var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
+        var registryOptions = new RegistryOptions(ThemeName.Monokai);
         var textMateInstallation = editor.InstallTextMate(registryOptions);
         
         var language = registryOptions.GetLanguageByExtension(".md");
