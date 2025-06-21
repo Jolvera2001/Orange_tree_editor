@@ -5,11 +5,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Platform.Storage;
 using AvaloniaEdit.Document;
-using DynamicData;
 using Orange_tree_editor.Models;
 using Orange_tree_editor.Services;
 using ReactiveUI;
@@ -18,10 +14,10 @@ namespace Orange_tree_editor.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
-    private string[] _supportedExtensions = [".md", ".markdown"];
+    private readonly string[] _supportedExtensions = [".md", ".markdown"];
     
     // service vars
-    IFileHelper _fileHelper;
+    private readonly IFileHelper _fileHelper;
     
     // Regular reactives
     private TextDocument _editorContent = new();
@@ -74,11 +70,6 @@ public class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            if (CurrentFile != null)
-            {
-                
-            }
-            
             EditorContent.Text = await _fileHelper.ReadAllText(path);
             CurrentFile = path;
         }
@@ -93,7 +84,7 @@ public class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            var file = await DoOpenFilePickerAsync();
+            var file = await _fileHelper.DoOpenFilePickerAsync();
             if (file is null) return;
 
             await using var readStream = await file.OpenReadAsync();
@@ -123,7 +114,7 @@ public class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            var folder = await DoOpenFolderPickerAsync();
+            var folder = await _fileHelper.DoOpenFolderPickerAsync();
             if (folder is null) return;
             
             var files = await _fileHelper.GetFilesInDirectory(folder.Path.AbsolutePath);
@@ -148,47 +139,4 @@ public class MainWindowViewModel : ViewModelBase
             Console.WriteLine(ex.Message);
         }
     }
-    
-    private async Task<IStorageFile?> DoOpenFilePickerAsync()
-    {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
-            desktop.MainWindow?.StorageProvider is not { } provider)
-            throw new NullReferenceException("Missing StorageProvider instance.");
-            
-        var files = await provider.OpenFilePickerAsync(new FilePickerOpenOptions()
-        {
-            Title = "Open Markdown File",
-            AllowMultiple = false,
-            FileTypeFilter = new[] { FilePickerFileTypes.All }
-        });
-        return files?.Count >= 1 ? files[0] : null;
-    }
-
-    private async Task<IStorageFile?> DoSaveFilePickerAsync()
-    {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
-            desktop.MainWindow?.StorageProvider is not { } provider)
-            throw new NullReferenceException("Missing StorageProvider instance.");
-            
-        return await provider.SaveFilePickerAsync(new FilePickerSaveOptions()
-        {
-            Title = "Save Markdown File",
-            DefaultExtension = "md"
-        });
-    }
-
-    private async Task<IStorageFolder?> DoOpenFolderPickerAsync()
-    {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
-            desktop.MainWindow?.StorageProvider is not { } provider)
-            throw new NullReferenceException("Missing StorageProvider instance.");
-            
-        var folders = await provider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
-        {
-            Title = "Select Project Folder",
-            AllowMultiple = false
-        });
-        return folders?.Count >= 1 ? folders[0] : null;
-    }
-    
 }
