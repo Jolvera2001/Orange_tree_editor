@@ -11,11 +11,11 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="Orange_tree_editor">
-    
+
     <!-- <Design.DataContext> -->
     <!--     <vm:MainWindowViewModel/> -->
     <!-- </Design.DataContext> -->
-    
+
     <Window.KeyBindings>
         <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveFileCommand}" />
         <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenFileDialogCommand}" />
@@ -24,8 +24,8 @@
 
     <DockPanel>
         <!-- Top bar -->
-        <Menu DockPanel.Dock="Top" 
-              BorderBrush="Gray" 
+        <Menu DockPanel.Dock="Top"
+              BorderBrush="Gray"
               BorderThickness="0, 0, 0, 1">
             <MenuItem Header="_File">
                 <MenuItem Header="_Open File" Command="{Binding OpenFileDialogCommand}" />
@@ -37,37 +37,80 @@
                 <MenuItem Header="_Select File" />
             </MenuItem>
         </Menu>
-        
+
         <!-- Bottom Bar -->
-        <Panel DockPanel.Dock="Bottom"
-               Background="DarkGray"
-               Height="30">
+        <Grid DockPanel.Dock="Bottom"
+              Background="DarkGray"
+              Height="30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             
-        </Panel>
-        
+            <StackPanel Grid.Column="0" 
+                        Orientation="Horizontal" 
+                        VerticalAlignment="Center"
+                        Margin="10,0">
+                <TextBlock Text="{Binding CurrentFile, StringFormat='Current File: {0}'}" 
+                           FontSize="12" 
+                           VerticalAlignment="Center"/>
+                <TextBlock Text=" | " 
+                           FontSize="12" 
+                           VerticalAlignment="Center"/>
+                <TextBlock Text="No Changes" 
+                           FontSize="12" 
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="0,0,10,0"
+                        Spacing="10">
+                <ProgressBar ShowProgressText="True"
+                             FontSize="10"
+                             CornerRadius="10"
+                             Width="120"
+                             Height="16"
+                             Name="ProgressBar" />
+                <TextBlock Text="100%" 
+                           FontSize="12" 
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+
         <!-- Sidebar -->
         <StackPanel DockPanel.Dock="Left"
                     Width="250">
             <TabControl>
-                <TabItem Header="Local" />
-                <TabItem Header="Database" />
+                <TabItem Header="Local">
+                    <TreeView ItemsSource="{Binding FolderItems}"
+                              HorizontalAlignment="Stretch">
+                        <TreeView.ItemTemplate>
+                            <DataTemplate>
+                                <controls:OTETreeItem />
+                            </DataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </TabItem>
+                <TabItem Header="Database">
+                    <TreeView ItemsSource="">
+                        <TreeView.ItemTemplate>
+                            <!-- TODO: Add Blog Item Control -->
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </TabItem>
             </TabControl>
-            <TreeView ItemsSource="{Binding FolderItems}" 
-                      HorizontalAlignment="Stretch">
-                <TreeView.ItemTemplate>
-                    <DataTemplate>
-                        <controls:OTETreeItem />
-                    </DataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
         </StackPanel>
-        
+
         <!-- Main Area -->
         <UniformGrid Rows="1" Columns="2">
             <avaloniaEdit:TextEditor Grid.Column="0"
                                      Name="Editor"
                                      Document="{Binding EditorContent}" />
-            <md:MarkdownScrollViewer Grid.Column="1" 
+            <md:MarkdownScrollViewer Grid.Column="1"
                                      Markdown="{Binding PreviewContent}" />
         </UniformGrid>
     </DockPanel>

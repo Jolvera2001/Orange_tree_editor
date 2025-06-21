@@ -71,7 +71,7 @@ public class MainWindowViewModel : ViewModelBase
         try
         {
             EditorContent.Text = await _fileHelper.ReadAllText(path);
-            CurrentFile = path;
+            CurrentFile = Path.GetFileName(path);
         }
         catch (Exception e)
         {
