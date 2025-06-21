@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:md="https://github.com/whistyun/Markdown.Avalonia"
         xmlns:avaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+        xmlns:controls="clr-namespace:Orange_tree_editor.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Orange_tree_editor.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="Orange_tree_editor">
-
+    
     <!-- <Design.DataContext> -->
     <!--     <vm:MainWindowViewModel/> -->
     <!-- </Design.DataContext> -->
@@ -45,19 +46,21 @@
         </Panel>
         
         <!-- Sidebar -->
-        <TreeView DockPanel.Dock="Left"
-                  ItemsSource="{Binding FolderItems}"
-                  Width="250"
-                  Background="LightGray">
-            <TreeView.ItemTemplate>
-                <DataTemplate>
-                    <Button Content="{Binding Name}"
-                            Command="{Binding $parent[TreeView].((vm:MainWindowViewModel)DataContext).OpenFileCommand}"
-                            CommandParameter="{Binding Path}">
-                    </Button>
-                </DataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>
+        <StackPanel DockPanel.Dock="Left"
+                    Width="250">
+            <TabControl>
+                <TabItem Header="Local" />
+                <TabItem Header="Database" />
+            </TabControl>
+            <TreeView ItemsSource="{Binding FolderItems}" 
+                      HorizontalAlignment="Stretch">
+                <TreeView.ItemTemplate>
+                    <DataTemplate>
+                        <controls:OTETreeItem />
+                    </DataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+        </StackPanel>
         
         <!-- Main Area -->
         <UniformGrid Rows="1" Columns="2">

@@ -34,4 +34,9 @@
         </PackageReference>
         <PackageReference Include="TextMateSharp.Grammars" Version="1.0.69" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Assets\Fonts\" />
+      <Folder Include="Styles\" />
+    </ItemGroup>
 </Project>

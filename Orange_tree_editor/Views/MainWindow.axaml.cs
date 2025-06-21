@@ -25,7 +25,7 @@ public partial class MainWindow : Window
 
     private void SetupHighlighting(TextEditor editor)
     {
-        var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
+        var registryOptions = new RegistryOptions(ThemeName.HighContrastLight);
         var textMateInstallation = editor.InstallTextMate(registryOptions);
         
         textMateInstallation.AppliedTheme += (sender, installation) =>
