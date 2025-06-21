@@ -17,6 +17,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<MainWindowViewModel>();
         
         // Other Services
+        services.AddSingleton<DataContext>();
+        services.AddTransient<IDbService, DbService>();
         services.AddTransient<IFileHelper, FileHelper>();
     }
 }

@@ -1,18 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using Orange_tree_editor.Models;
 
 namespace Orange_tree_editor.Services;
 
-public class DbService : IDbService
+public class DbService(DataContext _context) : IDbService
 {
     public async Task<List<Blog>> GetBlogs()
     {
-        throw new System.NotImplementedException();
+        var filter = Builders<Blog>.Filter.Empty;
+        return await _context.GetBlogCollection().AsQueryable().ToListAsync();
     }
 
     public async Task UploadBlog(Blog newBlog)
     {
-        throw new System.NotImplementedException();
+        await _context.GetBlogCollection().InsertOneAsync(newBlog);
     }
 }
